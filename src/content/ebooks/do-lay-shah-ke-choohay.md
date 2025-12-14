@@ -6,13 +6,13 @@ category: Society
 tags: ["urdu", "society", "analysis"]
 language: ur
 cover_image: /assets/ebooks/do-lay-shah-ke-choohay/cover.jpg
-download_url: /assets/ebooks/do-lay-shah-ke-choohay/book.pdf
+download_url: /assets/ebooks/do-lay-shah-ke-choohay/UrduBook.pdf
 status: free
 ---
 
 ## Downloads
 
-- PDF: [Download](/assets/ebooks/do-lay-shah-ke-choohay/book.pdf)
+- PDF: [Download](/assets/ebooks/do-lay-shah-ke-choohay/UrduBook.pdf)
 - DOCX: [Download](/assets/ebooks/do-lay-shah-ke-choohay/book.docx)
 - English edition: [Dulley Shah’s Mice](/ebooks/dulley-shah-mice)
 

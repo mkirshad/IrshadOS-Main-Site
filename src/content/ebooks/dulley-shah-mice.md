@@ -6,13 +6,13 @@ category: Society
 tags: ["society", "analysis", "culture"]
 language: en
 cover_image: /assets/ebooks/dulley-shah-mice/cover.jpg
-download_url: /assets/ebooks/dulley-shah-mice/book.pdf
+download_url: /assets/ebooks/dulley-shah-mice/Dulley_Shah_Mice_English.pdf
 status: free
 ---
 
 ## Downloads
 
-- PDF: [Download](/assets/ebooks/dulley-shah-mice/book.pdf)
+- PDF: [Download](/assets/ebooks/dulley-shah-mice/Dulley_Shah_Mice_English.pdf)
 - DOCX: [Download](/assets/ebooks/dulley-shah-mice/book.docx)
 - Urdu edition: [دو لے شاہ کے چوہے](/ebooks/do-lay-shah-ke-choohay)
 
