@@ -11,3 +11,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Local screenshots / account images (do not commit)
+Docs/CloudFlare*.png
+Docs/Screenshots/

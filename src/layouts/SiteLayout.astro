@@ -10,6 +10,8 @@ type Props = {
   canonicalPath?: string;
   schema?: Record<string, unknown> | Array<Record<string, unknown>>;
   noIndex?: boolean;
+  lang?: string;
+  dir?: "ltr" | "rtl" | "auto";
 };
 
 const {
@@ -19,6 +21,8 @@ const {
   canonicalPath,
   schema,
   noIndex = false,
+  lang = "en",
+  dir,
 } = Astro.props;
 
 const siteName = "IrshadOS";
@@ -43,7 +47,7 @@ const schemaJson = JSON.stringify(schemas);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang} dir={dir}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
