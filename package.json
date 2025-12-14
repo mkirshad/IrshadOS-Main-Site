@@ -1,0 +1,26 @@
+{
+  "name": "irshados-main-site",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "@astrojs/cloudflare": "latest",
+    "@astrojs/mdx": "latest",
+    "@astrojs/tailwind": "latest",
+    "astro": "latest",
+    "autoprefixer": "latest",
+    "postcss": "latest",
+    "tailwindcss": "latest"
+  },
+  "devDependencies": {
+    "@astrojs/check": "latest",
+    "@tailwindcss/typography": "latest",
+    "typescript": "latest"
+  }
+}

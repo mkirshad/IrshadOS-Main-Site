@@ -1,0 +1,176 @@
+---
+import AppCard from "../components/AppCard.astro";
+import Container from "../components/Container.astro";
+import EbookCard from "../components/EbookCard.astro";
+import NewsletterForm from "../components/NewsletterForm.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { getApps, getEbooks } from "../lib/catalog";
+
+const apps = (await getApps()).slice(0, 3);
+const ebooks = (await getEbooks())
+  .slice()
+  .sort((a, b) => {
+    if (a.status !== b.status) return a.status === "free" ? -1 : 1;
+    return a.title.localeCompare(b.title);
+  })
+  .slice(0, 3);
+---
+
+<SiteLayout
+  title="Home"
+  description="IrshadOS builds an ultra-fast suite of apps and practical ebooks for builders who value clarity."
+>
+  <section class="relative overflow-hidden bg-gradient-to-b from-ink-50 to-white">
+    <Container class="grid gap-10 py-16 md:grid-cols-2 md:items-center">
+      <div class="grid gap-6">
+        <p
+          class="inline-flex w-fit items-center gap-2 rounded-full bg-white px-3 py-1 text-xs font-semibold text-ink-800 ring-1 ring-inset ring-ink-200"
+        >
+          SEO-first • Minimal • Fast
+        </p>
+        <h1 class="text-3xl font-semibold tracking-tight text-ink-950 sm:text-4xl">
+          A focused suite of apps and ebooks for builders.
+        </h1>
+        <p class="text-base leading-relaxed text-ink-700">
+          IrshadOS is designed for clarity and speed — clean UI, clean URLs, and content that’s easy
+          to discover and maintain.
+        </p>
+        <div class="flex flex-wrap items-center gap-3">
+          <a
+            href="/apps"
+            class="no-underline rounded-lg bg-ink-900 px-4 py-2 text-sm font-semibold text-white hover:bg-ink-800"
+          >
+            Explore Apps
+          </a>
+          <a
+            href="/ebooks"
+            class="no-underline rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-semibold text-ink-900 hover:bg-ink-50"
+          >
+            Browse Ebooks
+          </a>
+          <a
+            href="/contact"
+            class="no-underline text-sm font-semibold text-ink-700 hover:text-ink-900"
+          >
+            Contact
+          </a>
+        </div>
+
+        <div class="mt-2 grid gap-2 rounded-2xl border border-ink-100 bg-white p-5 text-sm text-ink-700">
+          <div class="flex items-start gap-3">
+            <span class="mt-0.5 size-2 rounded-full bg-emerald-500" aria-hidden="true" />
+            <p><span class="font-semibold text-ink-900">Apps suite:</span> curated tools with clean UX.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="mt-0.5 size-2 rounded-full bg-amber-500" aria-hidden="true" />
+            <p><span class="font-semibold text-ink-900">Ebooks:</span> practical guides, short and actionable.</p>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="mt-0.5 size-2 rounded-full bg-sky-500" aria-hidden="true" />
+            <p><span class="font-semibold text-ink-900">SEO-ready:</span> sitemap, canonical URLs, and JSON-LD.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="relative">
+        <div class="absolute -inset-6 rounded-[2rem] bg-gradient-to-tr from-ink-100 to-white" />
+        <img
+          src="/assets/banners/banner-1.jpg"
+          alt=""
+          class="relative aspect-[4/3] w-full rounded-[2rem] object-cover shadow-lg ring-1 ring-inset ring-ink-200"
+          loading="eager"
+          fetchpriority="high"
+        />
+      </div>
+    </Container>
+  </section>
+
+  <section class="bg-white">
+    <Container class="grid gap-10 py-14 md:grid-cols-3">
+      <div class="rounded-2xl border border-ink-100 bg-white p-6">
+        <img src="/assets/services/fotor-ai-11.jpg" alt="" class="h-12 w-12 rounded-xl object-cover" loading="lazy" />
+        <h2 class="mt-4 text-base font-semibold text-ink-900">Modern, minimal UI</h2>
+        <p class="mt-2 text-sm leading-relaxed text-ink-600">
+          A consistent design system with clean typography and responsive layouts.
+        </p>
+      </div>
+      <div class="rounded-2xl border border-ink-100 bg-white p-6">
+        <img src="/assets/services/freedom.jpg" alt="" class="h-12 w-12 rounded-xl object-cover" loading="lazy" />
+        <h2 class="mt-4 text-base font-semibold text-ink-900">Fast by default</h2>
+        <p class="mt-2 text-sm leading-relaxed text-ink-600">
+          Astro islands, minimal client JS, and clean pages designed for strong Lighthouse scores.
+        </p>
+      </div>
+      <div class="rounded-2xl border border-ink-100 bg-white p-6">
+        <img src="/assets/services/fotor-ai-10.jpg" alt="" class="h-12 w-12 rounded-xl object-cover" loading="lazy" />
+        <h2 class="mt-4 text-base font-semibold text-ink-900">Content-first SEO</h2>
+        <p class="mt-2 text-sm leading-relaxed text-ink-600">
+          Structured data, OpenGraph, canonical URLs, robots.txt, and sitemap.xml.
+        </p>
+      </div>
+    </Container>
+  </section>
+
+  <section class="bg-ink-50/40" id="apps">
+    <Container class="grid gap-6 py-14">
+      <div class="flex flex-col items-start justify-between gap-3 md:flex-row md:items-end">
+        <div class="grid gap-2">
+          <h2 class="text-2xl font-semibold tracking-tight text-ink-950">Apps Suite</h2>
+          <p class="text-sm text-ink-600">A growing directory of focused apps in the IrshadOS suite.</p>
+        </div>
+        <a
+          href="/apps"
+          class="no-underline rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-semibold text-ink-900 hover:bg-ink-50"
+        >
+          Explore all apps
+        </a>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-3">
+        {apps.map((app) => <AppCard app={app} />)}
+      </div>
+    </Container>
+  </section>
+
+  <section class="bg-white" id="ebooks">
+    <Container class="grid gap-6 py-14">
+      <div class="flex flex-col items-start justify-between gap-3 md:flex-row md:items-end">
+        <div class="grid gap-2">
+          <h2 class="text-2xl font-semibold tracking-tight text-ink-950">Ebooks</h2>
+          <p class="text-sm text-ink-600">Short, practical guides — built for builders.</p>
+        </div>
+        <a
+          href="/ebooks"
+          class="no-underline rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-semibold text-ink-900 hover:bg-ink-50"
+        >
+          Browse all ebooks
+        </a>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-3">
+        {ebooks.map((ebook) => <EbookCard ebook={ebook} />)}
+      </div>
+    </Container>
+  </section>
+
+  <section class="bg-ink-50/40" id="contact">
+    <Container class="grid gap-10 py-14 md:grid-cols-2 md:items-start">
+      <div class="grid gap-3">
+        <h2 class="text-2xl font-semibold tracking-tight text-ink-950">Contact</h2>
+        <p class="text-sm leading-relaxed text-ink-600">
+          Want to collaborate, request an ebook topic, or discuss an app idea? Send a message anytime.
+        </p>
+        <a
+          href="/contact"
+          class="no-underline w-fit rounded-lg bg-ink-900 px-4 py-2 text-sm font-semibold text-white hover:bg-ink-800"
+        >
+          Go to contact page
+        </a>
+      </div>
+
+      <div class="rounded-2xl border border-ink-100 bg-white p-6">
+        <NewsletterForm />
+      </div>
+    </Container>
+  </section>
+</SiteLayout>

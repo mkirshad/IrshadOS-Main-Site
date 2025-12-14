@@ -1,0 +1,66 @@
+---
+import Container from "../components/Container.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { getCollection } from "astro:content";
+
+const entry = (await getCollection("pages")).find((p) => p.slug === "contact");
+if (!entry) throw new Response(null, { status: 404 });
+
+const rendered = await entry.render();
+---
+
+<SiteLayout title={entry.data.title} description={entry.data.description}>
+  <section class="bg-ink-50/40">
+    <Container class="grid gap-8 py-12 md:grid-cols-2 md:items-start">
+      <article class="prose prose-zinc max-w-none">
+        <h1>{entry.data.title}</h1>
+        <rendered.Content />
+      </article>
+
+      <div class="rounded-2xl border border-ink-100 bg-white p-6">
+        <form class="grid gap-4">
+          <label class="grid gap-1">
+            <span class="text-sm font-medium text-ink-900">Name</span>
+            <input
+              type="text"
+              name="name"
+              autocomplete="name"
+              class="w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-ink-400 focus:outline-none focus:ring-2 focus:ring-ink-100"
+            />
+          </label>
+
+          <label class="grid gap-1">
+            <span class="text-sm font-medium text-ink-900">Email</span>
+            <input
+              type="email"
+              name="email"
+              autocomplete="email"
+              class="w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-ink-400 focus:outline-none focus:ring-2 focus:ring-ink-100"
+            />
+          </label>
+
+          <label class="grid gap-1">
+            <span class="text-sm font-medium text-ink-900">Message</span>
+            <textarea
+              name="message"
+              rows={5}
+              class="w-full resize-y rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-ink-400 focus:outline-none focus:ring-2 focus:ring-ink-100"
+            />
+          </label>
+
+          <button
+            type="button"
+            disabled
+            class="rounded-lg bg-ink-900 px-4 py-2 text-sm font-semibold text-white opacity-60"
+          >
+            Send (UI only)
+          </button>
+
+          <p class="text-xs text-ink-600">
+            This form is UI-only right now. We’ll wire it to the IrshadOS app later.
+          </p>
+        </form>
+      </div>
+    </Container>
+  </section>
+</SiteLayout>

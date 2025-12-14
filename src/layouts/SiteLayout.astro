@@ -1,0 +1,81 @@
+---
+import "../styles/global.css";
+import SiteFooter from "../components/SiteFooter.astro";
+import SiteNav from "../components/SiteNav.astro";
+
+type Props = {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  canonicalPath?: string;
+  schema?: Record<string, unknown> | Array<Record<string, unknown>>;
+  noIndex?: boolean;
+};
+
+const {
+  title,
+  description = "IrshadOS builds focused apps and ebooks that help you work with clarity.",
+  ogImage = "/assets/banners/banner-1.jpg",
+  canonicalPath,
+  schema,
+  noIndex = false,
+} = Astro.props;
+
+const siteName = "IrshadOS";
+const fullTitle = title ? `${title} · ${siteName}` : siteName;
+const canonicalUrl = new URL(canonicalPath ?? Astro.url.pathname, Astro.site ?? Astro.url);
+const ogImageUrl = new URL(ogImage, Astro.site ?? Astro.url);
+
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: siteName,
+  url: (Astro.site ?? Astro.url).origin,
+  logo: new URL("/favicon.svg", Astro.site ?? Astro.url).toString(),
+};
+
+const schemas = [
+  organizationSchema,
+  ...(schema ? (Array.isArray(schema) ? schema : [schema]) : []),
+];
+
+const schemaJson = JSON.stringify(schemas);
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl.toString()} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta name="theme-color" content="#18181b" />
+    {noIndex && <meta name="robots" content="noindex,nofollow" />}
+
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl.toString()} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImageUrl.toString()} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl.toString()} />
+
+    <script type="application/ld+json" is:inline set:html={schemaJson}></script>
+  </head>
+  <body class="min-h-screen bg-white text-ink-900">
+    <div class="flex min-h-screen flex-col">
+      <SiteNav />
+      <main class="flex-1">
+        <slot />
+      </main>
+      <SiteFooter />
+    </div>
+  </body>
+</html>

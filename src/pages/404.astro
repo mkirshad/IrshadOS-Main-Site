@@ -1,0 +1,39 @@
+---
+import Container from "../components/Container.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+---
+
+<SiteLayout title="Page Not Found" description="The page you requested does not exist." noIndex>
+  <section class="bg-white">
+    <Container class="grid gap-6 py-16">
+      <div class="grid gap-3">
+        <h1 class="text-3xl font-semibold tracking-tight text-ink-950">404 — Page not found</h1>
+        <p class="text-sm text-ink-600">
+          The page you’re looking for doesn’t exist or may have moved.
+        </p>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <a
+          href="/"
+          class="no-underline rounded-lg bg-ink-900 px-4 py-2 text-sm font-semibold text-white hover:bg-ink-800"
+        >
+          Go home
+        </a>
+        <a
+          href="/apps"
+          class="no-underline rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-semibold text-ink-900 hover:bg-ink-50"
+        >
+          Browse apps
+        </a>
+        <a
+          href="/ebooks"
+          class="no-underline rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-semibold text-ink-900 hover:bg-ink-50"
+        >
+          Browse ebooks
+        </a>
+      </div>
+    </Container>
+  </section>
+</SiteLayout>
+

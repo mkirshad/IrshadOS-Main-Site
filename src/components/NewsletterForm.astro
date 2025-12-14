@@ -1,0 +1,34 @@
+---
+type Props = {
+  compact?: boolean;
+};
+
+const { compact = false } = Astro.props;
+
+const emailId = "newsletter-email";
+---
+
+<form class:list={["grid gap-2", compact ? "sm:flex sm:items-center sm:gap-3" : ""]}>
+  <div class="grid gap-1">
+    <p class="text-sm font-medium text-ink-900">Newsletter</p>
+    <p class="text-sm text-ink-600">Product updates and new ebooks. (UI only)</p>
+  </div>
+  <div class:list={["grid gap-2", compact ? "sm:flex sm:gap-2" : ""]}>
+    <label for={emailId} class="sr-only">Email</label>
+    <input
+      id={emailId}
+      type="email"
+      name="email"
+      placeholder="you@example.com"
+      autocomplete="email"
+      class="w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 placeholder:text-ink-400 focus:border-ink-400 focus:outline-none focus:ring-2 focus:ring-ink-100"
+    />
+    <button
+      type="button"
+      disabled
+      class="rounded-lg bg-ink-900 px-4 py-2 text-sm font-semibold text-white opacity-60"
+    >
+      Subscribe
+    </button>
+  </div>
+</form>

@@ -1,0 +1,45 @@
+---
+import Container from "./Container.astro";
+import NewsletterForm from "./NewsletterForm.astro";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-ink-100 bg-white">
+  <Container class="grid gap-10 py-12 md:grid-cols-3">
+    <div class="grid gap-3">
+      <a href="/" class="no-underline text-sm font-semibold tracking-tight text-ink-900">
+        IrshadOS
+      </a>
+      <p class="text-sm text-ink-600">
+        A focused suite of apps and ebooks built for clarity, speed, and long-term maintainability.
+      </p>
+    </div>
+
+    <div class="grid gap-3">
+      <h2 class="text-sm font-semibold text-ink-900">Explore</h2>
+      <div class="grid gap-2 text-sm">
+        <a class="no-underline text-ink-700 hover:text-ink-900" href="/apps">Apps</a>
+        <a class="no-underline text-ink-700 hover:text-ink-900" href="/ebooks">Ebooks</a>
+        <a class="no-underline text-ink-700 hover:text-ink-900" href="/about">About</a>
+        <a class="no-underline text-ink-700 hover:text-ink-900" href="/contact">Contact</a>
+      </div>
+    </div>
+
+    <div class="grid gap-4">
+      <NewsletterForm compact />
+      <div class="flex flex-wrap gap-x-4 gap-y-2 text-sm text-ink-600">
+        <a class="no-underline hover:text-ink-900" href="/privacy">Privacy</a>
+        <a class="no-underline hover:text-ink-900" href="/terms">Terms</a>
+      </div>
+    </div>
+  </Container>
+
+  <div class="border-t border-ink-100">
+    <Container class="flex flex-col gap-2 py-6 text-sm text-ink-600 md:flex-row md:items-center md:justify-between">
+      <span>© {year} IrshadOS. All rights reserved.</span>
+      <span class="text-ink-500">Built with Astro + Tailwind.</span>
+    </Container>
+  </div>
+</footer>
+

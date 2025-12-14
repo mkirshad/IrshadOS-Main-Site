@@ -1,0 +1,27 @@
+---
+type Variant = "neutral" | "success" | "warning";
+
+type Props = {
+  variant?: Variant;
+  class?: string;
+};
+
+const { variant = "neutral", class: className } = Astro.props;
+
+const variants: Record<Variant, string> = {
+  neutral: "bg-ink-100 text-ink-800 ring-ink-200",
+  success: "bg-emerald-50 text-emerald-800 ring-emerald-200",
+  warning: "bg-amber-50 text-amber-900 ring-amber-200",
+};
+---
+
+<span
+  class:list={[
+    "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset",
+    variants[variant],
+    className,
+  ]}
+>
+  <slot />
+</span>
+

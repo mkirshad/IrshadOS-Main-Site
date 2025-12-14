@@ -1,0 +1,135 @@
+---
+export const prerender = false;
+
+import AppCard from "../../components/AppCard.astro";
+import Container from "../../components/Container.astro";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { getApps } from "../../lib/catalog";
+
+const allApps = await getApps();
+
+const q = (Astro.url.searchParams.get("q") ?? "").trim();
+const tag = (Astro.url.searchParams.get("tag") ?? "").trim();
+const status = (Astro.url.searchParams.get("status") ?? "").trim();
+const hasFilters = q.length > 0 || tag.length > 0 || status.length > 0;
+
+const tags = Array.from(new Set(allApps.flatMap((a) => a.tags))).sort((a, b) => a.localeCompare(b));
+
+const filtered = allApps.filter((app) => {
+  const matchesQ =
+    q.length === 0 ||
+    app.name.toLowerCase().includes(q.toLowerCase()) ||
+    app.short_description.toLowerCase().includes(q.toLowerCase());
+
+  const matchesTag = tag.length === 0 || app.tags.includes(tag);
+  const matchesStatus = status.length === 0 || app.status === status;
+
+  return matchesQ && matchesTag && matchesStatus;
+});
+
+const listingSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "IrshadOS Apps",
+  itemListElement: filtered.map((app, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    url: new URL(`/apps/${app.slug}`, Astro.site ?? Astro.url).toString(),
+    name: app.name,
+  })),
+};
+---
+
+<SiteLayout
+  title="Apps"
+  description="Explore IrshadOS apps — a growing suite of focused tools."
+  schema={listingSchema}
+  canonicalPath="/apps"
+  noIndex={hasFilters}
+>
+  <section class="bg-ink-50/40">
+    <Container class="grid gap-6 py-12">
+      <div class="grid gap-2">
+        <h1 class="text-3xl font-semibold tracking-tight text-ink-950">Apps</h1>
+        <p class="text-sm text-ink-600">
+          Search and filter the IrshadOS apps directory. API-backed when available; local content fallback otherwise.
+        </p>
+      </div>
+
+      <form method="get" class="grid gap-3 rounded-2xl border border-ink-100 bg-white p-5 md:grid-cols-4">
+        <label class="grid gap-1 md:col-span-2">
+          <span class="text-sm font-medium text-ink-900">Search</span>
+          <input
+            type="search"
+            name="q"
+            value={q}
+            placeholder="Search apps…"
+            class="w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 placeholder:text-ink-400 focus:border-ink-400 focus:outline-none focus:ring-2 focus:ring-ink-100"
+          />
+        </label>
+
+        <label class="grid gap-1">
+          <span class="text-sm font-medium text-ink-900">Tag</span>
+          <select
+            name="tag"
+            class="w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-ink-400 focus:outline-none focus:ring-2 focus:ring-ink-100"
+          >
+            <option value="" selected={tag.length === 0}>All tags</option>
+            {tags.map((t) => (
+              <option value={t} selected={t === tag}>
+                {t}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label class="grid gap-1">
+          <span class="text-sm font-medium text-ink-900">Status</span>
+          <select
+            name="status"
+            class="w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-ink-400 focus:outline-none focus:ring-2 focus:ring-ink-100"
+          >
+            <option value="" selected={status.length === 0}>All</option>
+            <option value="live" selected={status === "live"}>Live</option>
+            <option value="coming-soon" selected={status === "coming-soon"}>Coming soon</option>
+          </select>
+        </label>
+
+        <div class="md:col-span-4 flex flex-wrap items-center justify-between gap-3">
+          <p class="text-sm text-ink-600">
+            Showing <span class="font-semibold text-ink-900">{filtered.length}</span> of{" "}
+            <span class="font-semibold text-ink-900">{allApps.length}</span>
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <button
+              type="submit"
+              class="rounded-lg bg-ink-900 px-4 py-2 text-sm font-semibold text-white hover:bg-ink-800"
+            >
+              Apply
+            </button>
+            <a
+              href="/apps"
+              class="no-underline rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-semibold text-ink-900 hover:bg-ink-50"
+            >
+              Reset
+            </a>
+          </div>
+        </div>
+      </form>
+    </Container>
+  </section>
+
+  <section class="bg-white">
+    <Container class="py-12">
+      {filtered.length === 0 ? (
+        <div class="rounded-2xl border border-ink-100 bg-white p-8 text-sm text-ink-600">
+          No apps match your filters.
+        </div>
+      ) : (
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((app) => <AppCard app={app} />)}
+        </div>
+      )}
+    </Container>
+  </section>
+</SiteLayout>

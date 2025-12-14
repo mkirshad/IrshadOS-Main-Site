@@ -1,0 +1,54 @@
+---
+import type { Ebook } from "../lib/catalog";
+import Badge from "./Badge.astro";
+
+type Props = {
+  ebook: Ebook;
+};
+
+const { ebook } = Astro.props;
+---
+
+<a
+  href={`/ebooks/${ebook.slug}`}
+  class="group no-underline overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-ink-200 hover:shadow-md"
+>
+  {ebook.cover_image ? (
+    <img
+      src={ebook.cover_image}
+      alt=""
+      class="aspect-[16/9] w-full object-cover"
+      loading="lazy"
+    />
+  ) : (
+    <div class="aspect-[16/9] w-full bg-gradient-to-br from-ink-50 to-white" />
+  )}
+
+  <div class="grid gap-3 p-5">
+    <div class="flex flex-wrap items-center justify-between gap-2">
+      <h3 class="text-base font-semibold text-ink-900 group-hover:text-ink-950">{ebook.title}</h3>
+      <Badge variant={ebook.status === "free" ? "success" : "warning"}>
+        {ebook.status === "free" ? "Free" : "Coming soon"}
+      </Badge>
+    </div>
+
+    <p class="text-sm text-ink-600">{ebook.description}</p>
+
+    <div class="flex flex-wrap gap-x-3 gap-y-1 text-xs font-medium text-ink-600">
+      <span>{ebook.author}</span>
+      {ebook.category && <span>• {ebook.category}</span>}
+      <span>• {ebook.language.toUpperCase()}</span>
+    </div>
+
+    {ebook.tags.length > 0 && (
+      <div class="flex flex-wrap gap-2">
+        {ebook.tags.slice(0, 4).map((t) => (
+          <span class="rounded-full bg-ink-50 px-2 py-0.5 text-xs font-medium text-ink-700">
+            {t}
+          </span>
+        ))}
+      </div>
+    )}
+  </div>
+</a>
+

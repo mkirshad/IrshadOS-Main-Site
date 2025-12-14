@@ -1,0 +1,166 @@
+---
+export const prerender = false;
+
+import Container from "../../components/Container.astro";
+import EbookCard from "../../components/EbookCard.astro";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { getEbooks } from "../../lib/catalog";
+
+const allEbooks = await getEbooks();
+
+const q = (Astro.url.searchParams.get("q") ?? "").trim();
+const category = (Astro.url.searchParams.get("category") ?? "").trim();
+const lang = (Astro.url.searchParams.get("lang") ?? "").trim();
+const tag = (Astro.url.searchParams.get("tag") ?? "").trim();
+const hasFilters = q.length > 0 || category.length > 0 || lang.length > 0 || tag.length > 0;
+
+const categories = Array.from(new Set(allEbooks.map((e) => e.category).filter(Boolean) as string[])).sort(
+  (a, b) => a.localeCompare(b),
+);
+const languages = Array.from(new Set(allEbooks.map((e) => e.language).filter(Boolean))).sort((a, b) =>
+  a.localeCompare(b),
+);
+const tags = Array.from(new Set(allEbooks.flatMap((e) => e.tags))).sort((a, b) => a.localeCompare(b));
+
+const filtered = allEbooks.filter((ebook) => {
+  const matchesQ =
+    q.length === 0 ||
+    ebook.title.toLowerCase().includes(q.toLowerCase()) ||
+    ebook.description.toLowerCase().includes(q.toLowerCase());
+
+  const matchesCategory = category.length === 0 || ebook.category === category;
+  const matchesLang = lang.length === 0 || ebook.language === lang;
+  const matchesTag = tag.length === 0 || ebook.tags.includes(tag);
+
+  return matchesQ && matchesCategory && matchesLang && matchesTag;
+});
+
+const ordered = filtered.slice().sort((a, b) => {
+  if (a.status !== b.status) return a.status === "free" ? -1 : 1;
+  return a.title.localeCompare(b.title);
+});
+
+const listingSchema = {
+  "@context": "https://schema.org",
+  "@type": "ItemList",
+  name: "IrshadOS Ebooks",
+  itemListElement: ordered.map((ebook, index) => ({
+    "@type": "ListItem",
+    position: index + 1,
+    url: new URL(`/ebooks/${ebook.slug}`, Astro.site ?? Astro.url).toString(),
+    name: ebook.title,
+  })),
+};
+---
+
+<SiteLayout
+  title="Ebooks"
+  description="Browse practical IrshadOS ebooks — short, actionable guides for builders."
+  schema={listingSchema}
+  canonicalPath="/ebooks"
+  noIndex={hasFilters}
+>
+  <section class="bg-ink-50/40">
+    <Container class="grid gap-6 py-12">
+      <div class="grid gap-2">
+        <h1 class="text-3xl font-semibold tracking-tight text-ink-950">Ebooks</h1>
+        <p class="text-sm text-ink-600">
+          Filter by category, language, and tags. Download CTA is placeholder for now.
+        </p>
+      </div>
+
+      <form method="get" class="grid gap-3 rounded-2xl border border-ink-100 bg-white p-5 md:grid-cols-6">
+        <label class="grid gap-1 md:col-span-2">
+          <span class="text-sm font-medium text-ink-900">Search</span>
+          <input
+            type="search"
+            name="q"
+            value={q}
+            placeholder="Search ebooks…"
+            class="w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 placeholder:text-ink-400 focus:border-ink-400 focus:outline-none focus:ring-2 focus:ring-ink-100"
+          />
+        </label>
+
+        <label class="grid gap-1 md:col-span-2">
+          <span class="text-sm font-medium text-ink-900">Category</span>
+          <select
+            name="category"
+            class="w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-ink-400 focus:outline-none focus:ring-2 focus:ring-ink-100"
+          >
+            <option value="" selected={category.length === 0}>All categories</option>
+            {categories.map((c) => (
+              <option value={c} selected={c === category}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label class="grid gap-1">
+          <span class="text-sm font-medium text-ink-900">Language</span>
+          <select
+            name="lang"
+            class="w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-ink-400 focus:outline-none focus:ring-2 focus:ring-ink-100"
+          >
+            <option value="" selected={lang.length === 0}>All</option>
+            {languages.map((l) => (
+              <option value={l} selected={l === lang}>
+                {l.toUpperCase()}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label class="grid gap-1">
+          <span class="text-sm font-medium text-ink-900">Tag</span>
+          <select
+            name="tag"
+            class="w-full rounded-lg border border-ink-200 bg-white px-3 py-2 text-sm text-ink-900 focus:border-ink-400 focus:outline-none focus:ring-2 focus:ring-ink-100"
+          >
+            <option value="" selected={tag.length === 0}>All tags</option>
+            {tags.map((t) => (
+              <option value={t} selected={t === tag}>
+                {t}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <div class="md:col-span-6 flex flex-wrap items-center justify-between gap-3">
+          <p class="text-sm text-ink-600">
+            Showing <span class="font-semibold text-ink-900">{filtered.length}</span> of{" "}
+            <span class="font-semibold text-ink-900">{allEbooks.length}</span>
+          </p>
+          <div class="flex flex-wrap gap-2">
+            <button
+              type="submit"
+              class="rounded-lg bg-ink-900 px-4 py-2 text-sm font-semibold text-white hover:bg-ink-800"
+            >
+              Apply
+            </button>
+            <a
+              href="/ebooks"
+              class="no-underline rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-semibold text-ink-900 hover:bg-ink-50"
+            >
+              Reset
+            </a>
+          </div>
+        </div>
+      </form>
+    </Container>
+  </section>
+
+  <section class="bg-white">
+    <Container class="py-12">
+      {ordered.length === 0 ? (
+        <div class="rounded-2xl border border-ink-100 bg-white p-8 text-sm text-ink-600">
+          No ebooks match your filters.
+        </div>
+      ) : (
+        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          {ordered.map((ebook) => <EbookCard ebook={ebook} />)}
+        </div>
+      )}
+    </Container>
+  </section>
+</SiteLayout>

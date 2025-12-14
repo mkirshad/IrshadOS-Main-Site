@@ -1,0 +1,80 @@
+---
+import Container from "./Container.astro";
+
+const pathname = Astro.url.pathname;
+
+const links = [
+  { href: "/", label: "Home" },
+  { href: "/apps", label: "Apps" },
+  { href: "/ebooks", label: "Ebooks" },
+  { href: "/about", label: "About" },
+  { href: "/contact", label: "Contact" },
+];
+
+function isActive(href: string) {
+  if (href === "/") return pathname === "/";
+  return pathname === href || pathname.startsWith(`${href}/`);
+}
+---
+
+<header class="sticky top-0 z-40 border-b border-ink-100 bg-white/80 backdrop-blur">
+  <Container class="flex items-center justify-between py-4">
+    <a href="/" class="no-underline">
+      <span class="inline-flex items-center gap-2">
+        <span
+          class="grid size-8 place-items-center rounded-lg bg-ink-900 text-sm font-semibold text-white"
+          aria-hidden="true"
+        >
+          IO
+        </span>
+        <span class="text-sm font-semibold tracking-tight text-ink-900">IrshadOS</span>
+      </span>
+    </a>
+
+    <nav class="hidden items-center gap-6 md:flex" aria-label="Primary">
+      {
+        links.map((l) => (
+          <a
+            href={l.href}
+            class:list={[
+              "no-underline text-sm font-medium text-ink-700 hover:text-ink-900",
+              isActive(l.href) && "text-ink-900",
+            ]}
+          >
+            {l.label}
+          </a>
+        ))
+      }
+    </nav>
+
+    <div class="md:hidden">
+      <details class="group relative">
+        <summary
+          class="list-none rounded-lg border border-ink-200 px-3 py-2 text-sm font-medium text-ink-800"
+        >
+          Menu
+        </summary>
+        <div
+          class="absolute right-0 mt-2 w-56 rounded-xl border border-ink-100 bg-white p-2 shadow-lg"
+        >
+          <nav class="grid gap-1" aria-label="Mobile">
+            {
+              links.map((l) => (
+                <a
+                  href={l.href}
+                  class:list={[
+                    "no-underline rounded-lg px-3 py-2 text-sm font-medium text-ink-700 hover:bg-ink-50 hover:text-ink-900",
+                    isActive(l.href) && "bg-ink-50 text-ink-900",
+                  ]}
+                >
+                  {l.label}
+                </a>
+              ))
+            }
+          </nav>
+        </div>
+      </details>
+    </div>
+  </Container>
+</header>
+
