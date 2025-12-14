@@ -3,5 +3,6 @@ title: Contact
 description: Get in touch with IrshadOS.
 ---
 
-Use the form below to send a message. (No backend wired yet — UI only.)
+The contact form is UI-only right now.
 
+You can email us directly at: **[dev@irshados.com](mailto:dev@irshados.com)**.
