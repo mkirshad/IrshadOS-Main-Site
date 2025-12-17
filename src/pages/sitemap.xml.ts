@@ -20,6 +20,9 @@ export async function GET({ site }: { site?: URL }) {
     "/",
     "/apps",
     "/ebooks",
+    "/awareness",
+    "/abdalians-cooperative-housing-society-lahore",
+    "/blog",
     "/about",
     "/contact",
     "/privacy",
@@ -30,8 +33,9 @@ export async function GET({ site }: { site?: URL }) {
   const ebooks = (await getCollection("ebooks")).map((e) =>
     new URL(`/ebooks/${e.slug}`, base).toString(),
   );
+  const blog = (await getCollection("blog")).map((e) => new URL(`/blog/${e.slug}`, base).toString());
 
-  const urls = Array.from(new Set([...pages, ...apps, ...ebooks]));
+  const urls = Array.from(new Set([...pages, ...apps, ...ebooks, ...blog]));
   const body =
     `<?xml version="1.0" encoding="UTF-8"?>` +
     `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` +

@@ -1,0 +1,82 @@
+---
+export const prerender = true;
+
+import Container from "../../components/Container.astro";
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("blog"))
+  .slice()
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "2-digit" });
+}
+---
+
+<SiteLayout
+  title="Blog"
+  description="Community threads and mazmoon-style articles (including Abdalians CHS Lahore)."
+  canonicalPath="/blog"
+>
+  <section class="bg-ink-50/40">
+    <Container class="grid gap-6 py-12">
+      <div class="grid gap-2">
+        <h1 class="text-3xl font-semibold tracking-tight text-ink-950">Blog / Threads</h1>
+        <p class="max-w-2xl text-sm leading-relaxed text-ink-600">
+          Forum-style threads and mazmoon-style articles for community awareness and documentation.
+        </p>
+      </div>
+
+      <div class="rounded-2xl border border-ink-100 bg-white p-5 text-sm text-ink-700">
+        Looking for Abdalians Cooperative Housing Society (ACHS) Lahore posts? Visit{" "}
+        <a
+          href="/abdalians-cooperative-housing-society-lahore"
+          class="no-underline font-semibold text-ink-900 hover:text-ink-950"
+        >
+          the Abdalians CHS hub
+        </a>
+        .
+      </div>
+    </Container>
+  </section>
+
+  <section class="bg-white">
+    <Container class="py-12">
+      {posts.length === 0 ? (
+        <div class="rounded-2xl border border-ink-100 bg-white p-8 text-sm text-ink-600">
+          No posts yet.
+        </div>
+      ) : (
+        <div class="grid gap-4 md:grid-cols-2">
+          {posts.map((post) => (
+            <a
+              href={`/blog/${post.slug}`}
+              class="group no-underline rounded-2xl border border-ink-100 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-ink-200 hover:shadow-md"
+            >
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <h2 class="text-base font-semibold text-ink-900 group-hover:text-ink-950">
+                  {post.data.title}
+                </h2>
+                <span class="text-xs font-medium text-ink-600">{formatDate(post.data.publishedAt)}</span>
+              </div>
+              {post.data.description && (
+                <p class="mt-2 text-sm leading-relaxed text-ink-600">{post.data.description}</p>
+              )}
+              {post.data.tags.length > 0 && (
+                <div class="mt-4 flex flex-wrap gap-2">
+                  {post.data.tags.slice(0, 6).map((t) => (
+                    <span class="rounded-full bg-ink-50 px-2 py-0.5 text-xs font-medium text-ink-700">
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </a>
+          ))}
+        </div>
+      )}
+    </Container>
+  </section>
+</SiteLayout>
+

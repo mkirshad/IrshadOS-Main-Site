@@ -1,0 +1,165 @@
+---
+export const prerender = true;
+
+import Container from "../components/Container.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { awarenessPosters } from "../lib/awarenessPosters";
+import { getCollection } from "astro:content";
+
+const abdaliansPosts = (await getCollection("blog"))
+  .filter((p) => p.data.tags.includes("abdalians"))
+  .slice()
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+
+const featuredPosterFileNames = [
+  "abdalians_transition_poster_v6.png",
+  "achs_oath_over_manifesto_poster_v2.png",
+  "Protect Our Parks — Protect Our Rights.png",
+];
+
+const featuredPostersFromFileNames = featuredPosterFileNames
+  .map((fileName) => awarenessPosters.find((p) => p.fileName === fileName))
+  .filter((p): p is (typeof awarenessPosters)[number] => Boolean(p));
+
+const featuredPosters =
+  featuredPostersFromFileNames.length > 0 ? featuredPostersFromFileNames : awarenessPosters.slice(0, 3);
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString("en-GB", { year: "numeric", month: "short", day: "2-digit" });
+}
+
+const hubSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: "Abdalians Cooperative Housing Society (ACHS) Lahore",
+  about: "Community awareness posters and resident commentary threads for Abdalians Cooperative Housing Society (ACHS) Lahore.",
+  url: new URL("/abdalians-cooperative-housing-society-lahore", Astro.site ?? Astro.url).toString(),
+};
+---
+
+<SiteLayout
+  title="Abdalians Cooperative Housing Society (ACHS) Lahore"
+  description="Awareness posters and resident commentary threads for Abdalians Cooperative Housing Society (ACHS) Lahore."
+  canonicalPath="/abdalians-cooperative-housing-society-lahore"
+  schema={hubSchema}
+>
+  <section class="bg-ink-50/40">
+    <Container class="grid gap-6 py-12">
+      <div class="grid gap-2">
+        <h1 class="text-3xl font-semibold tracking-tight text-ink-950">
+          Abdalians Cooperative Housing Society (ACHS) Lahore
+        </h1>
+        <p class="max-w-3xl text-sm leading-relaxed text-ink-600">
+          A small hub page that collects community awareness posters and forum-style threads made for
+          Abdalians Cooperative Housing Society (ACHS) Lahore residents.
+        </p>
+      </div>
+
+      <div class="rounded-2xl border border-ink-100 bg-white p-5 text-sm text-ink-700">
+        For awareness and documentation only — not an official society channel.
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <a
+          href="/awareness"
+          class="no-underline rounded-lg bg-ink-900 px-4 py-2 text-sm font-semibold text-white hover:bg-ink-800"
+        >
+          View posters
+        </a>
+        <a
+          href="/blog"
+          class="no-underline rounded-lg border border-ink-200 bg-white px-4 py-2 text-sm font-semibold text-ink-900 hover:bg-ink-50"
+        >
+          Read threads
+        </a>
+      </div>
+    </Container>
+  </section>
+
+  <section class="bg-white">
+    <Container class="grid gap-6 py-12">
+      <div class="flex flex-col items-start justify-between gap-3 md:flex-row md:items-end">
+        <div class="grid gap-1">
+          <h2 class="text-xl font-semibold tracking-tight text-ink-950">Featured posters</h2>
+          <p class="text-sm text-ink-600">A quick view; the full gallery is on the Awareness page.</p>
+        </div>
+        <a
+          href="/awareness"
+          class="no-underline text-sm font-semibold text-ink-700 hover:text-ink-900"
+        >
+          Browse all posters →
+        </a>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {featuredPosters.map((poster) => (
+          <a
+            href="/awareness"
+            class="group no-underline overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-ink-200 hover:shadow-md"
+          >
+            <div class="aspect-[3/4] w-full bg-ink-50/40 p-3">
+              <img
+                src={poster.image.src}
+                width={poster.image.width}
+                height={poster.image.height}
+                alt={poster.alt}
+                loading="lazy"
+                class="h-full w-full rounded-xl object-contain ring-1 ring-inset ring-ink-200"
+              />
+            </div>
+            <div class="p-4">
+              <p class="text-sm font-semibold text-ink-900" dir={poster.dir} lang={poster.language}>
+                {poster.title}
+              </p>
+              <p class="mt-1 text-xs leading-relaxed text-ink-600" dir={poster.dir} lang={poster.language}>
+                {poster.caption}
+              </p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </Container>
+  </section>
+
+  <section class="bg-ink-50/40">
+    <Container class="grid gap-6 py-12">
+      <div class="flex flex-col items-start justify-between gap-3 md:flex-row md:items-end">
+        <div class="grid gap-1">
+          <h2 class="text-xl font-semibold tracking-tight text-ink-950">Resident threads</h2>
+          <p class="text-sm text-ink-600">Posts tagged for Abdalians Cooperative Housing Society.</p>
+        </div>
+        <a
+          href="/blog"
+          class="no-underline text-sm font-semibold text-ink-700 hover:text-ink-900"
+        >
+          Go to Blog →
+        </a>
+      </div>
+
+      {abdaliansPosts.length === 0 ? (
+        <div class="rounded-2xl border border-ink-100 bg-white p-8 text-sm text-ink-600">
+          No Abdalians CHS posts yet.
+        </div>
+      ) : (
+        <div class="grid gap-4 md:grid-cols-2">
+          {abdaliansPosts.map((post) => (
+            <a
+              href={`/blog/${post.slug}`}
+              class="group no-underline rounded-2xl border border-ink-100 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:border-ink-200 hover:shadow-md"
+            >
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <h3 class="text-base font-semibold text-ink-900 group-hover:text-ink-950">
+                  {post.data.title}
+                </h3>
+                <span class="text-xs font-medium text-ink-600">{formatDate(post.data.publishedAt)}</span>
+              </div>
+              {post.data.description && (
+                <p class="mt-2 text-sm leading-relaxed text-ink-600">{post.data.description}</p>
+              )}
+            </a>
+          ))}
+        </div>
+      )}
+    </Container>
+  </section>
+</SiteLayout>

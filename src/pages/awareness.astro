@@ -1,0 +1,97 @@
+---
+import Container from "../components/Container.astro";
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { awarenessPosters } from "../lib/awarenessPosters";
+---
+
+<SiteLayout
+  title="Awareness Posters"
+  description="Printable awareness posters created for housing society residents, including Abdalians Cooperative Housing Society (ACHS) Lahore."
+>
+  <section class="bg-white">
+    <Container class="grid gap-6 py-12">
+      <div class="grid gap-2">
+        <h1 class="text-3xl font-semibold tracking-tight text-ink-950">Awareness Posters</h1>
+        <p class="max-w-2xl text-sm leading-relaxed text-ink-600">
+          A small gallery of printable posters created for community awareness. Originally made for
+          Abdalians Cooperative Housing Society (ACHS) Lahore residents, but adaptable for any society.
+        </p>
+      </div>
+
+      <div class="rounded-2xl border border-ink-100 bg-ink-50/40 p-4 text-sm text-ink-700">
+        Click any poster to open the full image in a new tab. Looking for Abdalians CHS resources? Visit{" "}
+        <a
+          href="/abdalians-cooperative-housing-society-lahore"
+          class="no-underline font-semibold text-ink-900 hover:text-ink-950"
+        >
+          the Abdalians CHS hub
+        </a>
+        .
+      </div>
+    </Container>
+  </section>
+
+  <section class="bg-ink-50/40">
+    <Container class="py-12">
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          awarenessPosters.map((poster) => (
+            <figure class="group overflow-hidden rounded-2xl border border-ink-100 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-ink-200 hover:shadow-md">
+              <a
+                href={poster.image.src}
+                target="_blank"
+                rel="noopener"
+                class="block bg-ink-50/40 p-3 no-underline"
+              >
+                <div class="aspect-[3/4] w-full overflow-hidden rounded-xl bg-white ring-1 ring-inset ring-ink-200">
+                  <img
+                    src={poster.image.src}
+                    width={poster.image.width}
+                    height={poster.image.height}
+                    alt={poster.alt}
+                    loading="lazy"
+                    class="h-full w-full object-contain"
+                  />
+                </div>
+              </a>
+
+              <figcaption class="grid gap-1 p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="min-w-0">
+                    <p
+                      class="text-sm font-semibold text-ink-900"
+                      dir={poster.dir}
+                      lang={poster.language}
+                    >
+                      {poster.title}
+                    </p>
+                    <p
+                      class="mt-1 text-xs leading-relaxed text-ink-600"
+                      dir={poster.dir}
+                      lang={poster.language}
+                    >
+                      {poster.caption}
+                    </p>
+                  </div>
+                  {poster.language && (
+                    <span class="shrink-0 rounded-full bg-ink-50 px-2 py-0.5 text-xs font-semibold text-ink-700 ring-1 ring-inset ring-ink-100">
+                      {poster.language.toUpperCase()}
+                    </span>
+                  )}
+                </div>
+
+                <a
+                  href={poster.image.src}
+                  download={poster.fileName}
+                  class="mt-3 w-fit no-underline text-xs font-semibold text-ink-900 hover:text-ink-950"
+                >
+                  Download
+                </a>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </Container>
+  </section>
+</SiteLayout>
