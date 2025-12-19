@@ -18,6 +18,8 @@ type Props = { entry: CollectionEntry<"blog"> };
 
 const { entry } = Astro.props;
 const rendered = await entry.render();
+const pageLang = entry.data.language ?? "en";
+const isRtl = ["ar", "fa", "ur"].some((code) => pageLang.toLowerCase().startsWith(code));
 
 function formatDate(date: Date) {
   return date.toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "2-digit" });
@@ -38,6 +40,7 @@ const postSchema = {
   description={entry.data.description}
   canonicalPath={`/blog/${entry.slug}`}
   schema={postSchema}
+  lang={pageLang}
 >
   <section class="bg-white">
     <Container class="grid gap-8 py-12">
@@ -60,10 +63,13 @@ const postSchema = {
         )}
       </header>
 
-      <article class="prose prose-zinc max-w-none">
+      <article
+        class={`prose prose-zinc max-w-none ${isRtl ? "text-right" : ""}`}
+        lang={pageLang}
+        dir={isRtl ? "rtl" : "ltr"}
+      >
         <rendered.Content />
       </article>
     </Container>
   </section>
 </SiteLayout>
-
